@@ -128,6 +128,17 @@ const filterDonationRequest = async (req, res) => {
   }
 };
 
+const getAllDonationRequest = async (req, res) => {
+  try {
+    const requestCollection = await getCollection("request");
+    const result = await requestCollection.find().toArray();
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 module.exports = {
   createDonation,
   getDonorDonationRequests,
@@ -137,4 +148,5 @@ module.exports = {
   updateDonationStatus,
   deleteDonationRequest,
   filterDonationRequest,
+  getAllDonationRequest
 };
