@@ -1,5 +1,6 @@
 const express = require("express");
 const { createDonation, getDonorDonationRequests, getDonationDetails, updateDonationRequest, getRecentDonorDonationRequests, updateDonationStatus, deleteDonationRequest, filterDonationRequest, getAllDonationRequest } = require("../controllers/donation.js");
+const { createfundingHistory } = require("../controllers/funding.js");
 const appRouter = express.Router();
 
 appRouter.post("/create-donatio-request", createDonation);
@@ -11,5 +12,6 @@ appRouter.patch("/update-donation-status/:id", updateDonationStatus);
 appRouter.delete("/delete-donation-request/:id", deleteDonationRequest);
 appRouter.get("/filter-donation-request/:id", filterDonationRequest);
 appRouter.get("/all-donation-requests", getAllDonationRequest);
+appRouter.post("/createFundingHistory", createfundingHistory)
 
 module.exports = {appRouter}
