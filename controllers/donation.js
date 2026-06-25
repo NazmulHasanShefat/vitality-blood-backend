@@ -129,9 +129,13 @@ const filterDonationRequest = async (req, res) => {
 };
 
 const getAllDonationRequest = async (req, res) => {
+ const myquery = {};
   try {
+    if (req.query.searchQuery) {
+      myquery.donationStatus = req.query.searchQuery;
+    }
     const requestCollection = await getCollection("request");
-    const result = await requestCollection.find().toArray();
+    const result = await requestCollection.find(myquery).toArray();
     return res.json(result);
   } catch (error) {
     console.log(error);
