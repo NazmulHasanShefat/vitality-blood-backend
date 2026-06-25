@@ -22,4 +22,15 @@ const createfundingHistory = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = { createfundingHistory };
+
+
+const getTransactionHistory = async(req, res)=>{
+  try {
+     const fundCollection = await getCollection("founding");
+     const result = await fundCollection.find().toArray();
+     res.json(result);
+  } catch (error) {
+    console.log(error)
+  }
+}
+module.exports = { createfundingHistory, getTransactionHistory };

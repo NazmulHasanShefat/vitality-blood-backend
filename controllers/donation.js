@@ -138,29 +138,49 @@ const getAllDonationRequest = async (req, res) => {
   }
 };
 
-
-const getPedingBloodDonationRequest = async (req, res)=>{
+const getPedingBloodDonationRequest = async (req, res) => {
   const query = {};
+  const page = parseInt(req.query.page) || 1; // default page 1
+  const limit = parseInt(req.query.limit) || 10; // default 10 items
+  const skip = (page - 1) * limit;
+
   try {
-    if(req.query.donationStatus){
-      query.donationStatus = req.query.donationStatus
+    if (req.query.donationStatus) {
+      query.donationStatus = req.query.donationStatus;
     }
-    if(req.query.bloodGroup){
-      query.bloodGroup = req.query.bloodGroup
+    if (req.query.bloodGroup) {
+      query.bloodGroup = req.query.bloodGroup;
     }
-    if(req.query.recipientDivision){
+    if (req.query.recipientDivision) {
       query.recipientDivision = req.query.recipientDivision;
     }
-    if(req.query.recipientDistrict){
+    if (req.query.recipientDistrict) {
       query.recipientDistrict = req.query.recipientDistrict;
     }
     const requestCollection = await getCollection("request");
-    const result = await requestCollection.find(query).toArray();
-    return res.json(result)
+     const total = await requestCollection.countDocuments(query);
+    const result = await requestCollection
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    return res.json({
+      success: true,
+      data: result,
+      pagination: {
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        limit,
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 module.exports = {
   createDonation,
@@ -172,5 +192,5 @@ module.exports = {
   deleteDonationRequest,
   filterDonationRequest,
   getAllDonationRequest,
-  getPedingBloodDonationRequest
+  getPedingBloodDonationRequest,
 };
