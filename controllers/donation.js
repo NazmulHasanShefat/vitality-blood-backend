@@ -152,13 +152,35 @@ const filterDonationRequest = async (req, res) => {
 
 const getAllDonationRequest = async (req, res) => {
   const myquery = {};
+
+  const page = parseInt(req.query.page) || 1; // default page 1
+  const limit = parseInt(req.query.limit) || 5; // default 10 items
+  const skip = (page - 1) * limit;
+
   try {
     if (req.query.searchQuery) {
       myquery.donationStatus = req.query.searchQuery;
     }
     const requestCollection = await getCollection("request");
-    const result = await requestCollection.find(myquery).toArray();
-    return res.json(result);
+    const result = await requestCollection
+      .find(myquery)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    const total = await requestCollection.countDocuments();
+
+    return res.json({
+      success: true,
+      data: result,
+      pagination: {
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        limit,
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error) {
     console.log(error);
   }

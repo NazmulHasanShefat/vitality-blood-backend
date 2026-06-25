@@ -2,7 +2,7 @@ const express = require("express");
 const { createDonation, getDonorDonationRequests, getDonationDetails, updateDonationRequest, getRecentDonorDonationRequests, updateDonationStatus, deleteDonationRequest, filterDonationRequest, getAllDonationRequest, getPedingBloodDonationRequest } = require("../controllers/donation.js");
 const { createfundingHistory, getTransactionHistory } = require("../controllers/funding.js");
 const { updateProfile } = require("../controllers/user.js");
-const { verifyUser, verifyAdmin } = require("../middleware/verifyUser.js");
+const { verifyUser, verifyAdminAndVolunteer } = require("../middleware/verifyUser.js");
 const { getAllStates } = require("../controllers/states.js");
 const appRouter = express.Router();
 
@@ -14,7 +14,7 @@ appRouter.get("/get-recent-donor-request/:id", verifyUser, getRecentDonorDonatio
 appRouter.patch("/update-donation-status/:id", verifyUser, updateDonationStatus);
 appRouter.delete("/delete-donation-request/:id", verifyUser, deleteDonationRequest);
 appRouter.get("/filter-donation-request/:id", verifyUser, filterDonationRequest);
-appRouter.get("/all-donation-requests", verifyUser, verifyAdmin, getAllDonationRequest);
+appRouter.get("/all-donation-requests", verifyUser, verifyAdminAndVolunteer, getAllDonationRequest);
 appRouter.post("/createFundingHistory", verifyUser, createfundingHistory);
 appRouter.patch("/update-user/:id", verifyUser, updateProfile);
 appRouter.get("/get-pending-blood-donation-request", getPedingBloodDonationRequest);
