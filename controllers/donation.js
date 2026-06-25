@@ -141,7 +141,7 @@ const getAllDonationRequest = async (req, res) => {
 const getPedingBloodDonationRequest = async (req, res) => {
   const query = {};
   const page = parseInt(req.query.page) || 1; // default page 1
-  const limit = parseInt(req.query.limit) || 10; // default 10 items
+  const limit = parseInt(req.query.limit) || 8; // default 10 items
   const skip = (page - 1) * limit;
 
   try {
