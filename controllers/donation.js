@@ -139,6 +139,29 @@ const getAllDonationRequest = async (req, res) => {
 };
 
 
+const getPedingBloodDonationRequest = async (req, res)=>{
+  const query = {};
+  try {
+    if(req.query.donationStatus){
+      query.donationStatus = req.query.donationStatus
+    }
+    if(req.query.bloodGroup){
+      query.bloodGroup = req.query.bloodGroup
+    }
+    if(req.query.recipientDivision){
+      query.recipientDivision = req.query.recipientDivision;
+    }
+    if(req.query.recipientDistrict){
+      query.recipientDistrict = req.query.recipientDistrict;
+    }
+    const requestCollection = await getCollection("request");
+    const result = await requestCollection.find(query).toArray();
+    return res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   createDonation,
   getDonorDonationRequests,
@@ -148,5 +171,6 @@ module.exports = {
   updateDonationStatus,
   deleteDonationRequest,
   filterDonationRequest,
-  getAllDonationRequest
+  getAllDonationRequest,
+  getPedingBloodDonationRequest
 };
