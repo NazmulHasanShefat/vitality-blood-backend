@@ -115,21 +115,43 @@ const deleteDonationRequest = async (req, res) => {
 const filterDonationRequest = async (req, res) => {
   const { id } = req.params;
   const myquery = {};
+  // paginations
+  const page = parseInt(req.query.page) || 1; // default page 1
+  const limit = parseInt(req.query.limit) || 5; // default 10 items
+  const skip = (page - 1) * limit;
+
   try {
     if (req.query.searchQuery) {
       myquery.donationStatus = req.query.searchQuery;
     }
     const query = { requesterId: id, ...myquery };
     const requestCollection = await getCollection("request");
-    const result = await requestCollection.find(query).toArray();
-    return res.json(result);
+    const result = await requestCollection
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    const total = await requestCollection.countDocuments(query);
+    return res.json({
+      success: true,
+      data: result,
+      pagination: {
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        limit,
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
 const getAllDonationRequest = async (req, res) => {
- const myquery = {};
+  const myquery = {};
   try {
     if (req.query.searchQuery) {
       myquery.donationStatus = req.query.searchQuery;
@@ -162,7 +184,7 @@ const getPedingBloodDonationRequest = async (req, res) => {
       query.recipientDistrict = req.query.recipientDistrict;
     }
     const requestCollection = await getCollection("request");
-     const total = await requestCollection.countDocuments(query);
+    const total = await requestCollection.countDocuments(query);
     const result = await requestCollection
       .find(query)
       .skip(skip)
