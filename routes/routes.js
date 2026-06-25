@@ -16,6 +16,6 @@ appRouter.get("/filter-donation-request/:id", verifyUser, filterDonationRequest)
 appRouter.get("/all-donation-requests", verifyUser, verifyAdmin, getAllDonationRequest);
 appRouter.post("/createFundingHistory", verifyUser, createfundingHistory);
 appRouter.patch("/update-user/:id", verifyUser, updateProfile);
-appRouter.get("/get-pending-blood-donation-request", verifyUser, getPedingBloodDonationRequest)
+appRouter.get("/get-pending-blood-donation-request", getPedingBloodDonationRequest);
 
 module.exports = {appRouter}
