@@ -66,7 +66,6 @@ const verifyAdminAndVolunteer = async (req, res, next) => {
         .status(401)
         .json({ success: false, message: "unauthorized role access" });
     }
-    console.log(payload, "this is user role");
     next();
   } catch (error) {
     console.log(error);
