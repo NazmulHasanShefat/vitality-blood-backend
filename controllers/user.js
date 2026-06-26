@@ -20,4 +20,17 @@ const updateProfile = async(req, res)=>{
     }
 }
 
-module.exports = {updateProfile}
+
+const checkUserStatus = async (req, res)=>{
+    const {id} = req.params;
+    const query = {_id: new ObjectId(id)}
+    try {
+        const userCollection = await getCollection("user");
+        const result = await userCollection.findOne(query);
+        res.json(result);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = {updateProfile, checkUserStatus}

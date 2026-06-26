@@ -1,7 +1,7 @@
 const express = require("express");
 const { createDonation, getDonorDonationRequests, getDonationDetails, updateDonationRequest, getRecentDonorDonationRequests, updateDonationStatus, deleteDonationRequest, filterDonationRequest, getAllDonationRequest, getPedingBloodDonationRequest } = require("../controllers/donation.js");
 const { createfundingHistory, getTransactionHistory } = require("../controllers/funding.js");
-const { updateProfile } = require("../controllers/user.js");
+const { updateProfile, checkUserStatus } = require("../controllers/user.js");
 const { verifyUser, verifyAdminAndVolunteer } = require("../middleware/verifyUser.js");
 const { getAllStates } = require("../controllers/states.js");
 const appRouter = express.Router();
@@ -19,6 +19,7 @@ appRouter.post("/createFundingHistory", verifyUser, createfundingHistory);
 appRouter.patch("/update-user/:id", verifyUser, updateProfile);
 appRouter.get("/get-pending-blood-donation-request", getPedingBloodDonationRequest);
 appRouter.get("/get-transaction-history", getTransactionHistory);
-appRouter.get("/get-all-states", verifyUser, getAllStates)
+appRouter.get("/get-all-states", verifyUser, getAllStates);
+appRouter.get("/check-user/:id", verifyUser, checkUserStatus )
 
 module.exports = {appRouter}
